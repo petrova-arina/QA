@@ -1,0 +1,32 @@
+import unittest
+
+def round_error(value: float) -> float:
+    if value == 0:
+        return 0.0
+    exponent = math.floor(math.log10(abs(value)))
+    first_digit = int(abs(value) / (10 ** exponent))
+    if first_digit in [1, 2]:
+        rounded_value = round(value, -exponent + 1)
+    elif first_digit in [3, 4]:
+        rounded_value = round(value * 2, -exponent) / 2
+    else:
+        rounded_value = round(value, -exponent)
+    return rounded_value
+
+class TestRoundError(unittest.TestCase):
+    def test_rounding(self):
+        test_cases = [
+            (0.31, 0.35),
+            (0.61, 0.7),
+            (2.72, 2.8),
+            (0.0046, 0.005),
+            (0.0031, 0.0035),
+            (0.0009, 0.0009),
+            (6.8, 7.0)
+        ]
+        for val, expected in test_cases:
+            with self.subTest(val=val):
+                self.assertEqual(round_error(val), expected)
+
+if __name__ == "__main__":
+    unittest.main()
